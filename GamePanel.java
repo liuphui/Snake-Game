@@ -6,9 +6,9 @@ import java.util.Random;
 public class GamePanel extends JPanel implements ActionListener {
     static final int SCREEN_WIDTH = 600;
     static final int SCREEN_HEIGHT = 600;
-    static final int UNIT_SIZE = 25;
-    static final int GAME_UNITS = (SCREEN_WIDTH * SCREEN_HEIGHT) / (UNIT_SIZE*UNIT_SIZE);
-    static final int DELAY = 50;
+    static final int UNIT_SIZE = 50;
+    static final int GAME_UNITS = (SCREEN_WIDTH * SCREEN_HEIGHT) / (UNIT_SIZE * UNIT_SIZE);
+    static final int DELAY = 100;
     final int x[] = new int[GAME_UNITS];
     final int y[] = new int[GAME_UNITS];
     int bodyParts = 2;
@@ -27,12 +27,27 @@ public class GamePanel extends JPanel implements ActionListener {
         this.setBackground(Color.black);
         this.setFocusable(true);
         this.addKeyListener(new MyKeyAdapter());
-        startGame();
     }
 
     public void startGame() {
         newApple();
         running = true;
+        timer = new Timer(DELAY, this);
+        timer.start();
+
+        // First segment at (0, 0)
+        x[0] = 0;
+        y[0] = 0;
+        
+        // Second segment behind the head
+        x[1] = -UNIT_SIZE;
+        y[1] = 0;
+
+        newApple();
+        running = true;
+
+        // Timer config
+        if (timer != null) timer.stop();
         timer = new Timer(DELAY, this);
         timer.start();
     }
@@ -118,7 +133,7 @@ public class GamePanel extends JPanel implements ActionListener {
             running = false;
         }
         // checks if head collides with right wall
-        if (x[0] > SCREEN_WIDTH) {
+        if (x[0] >= SCREEN_WIDTH) {
             running = false;
         }
         // checks if head collides with ceiling
@@ -126,7 +141,7 @@ public class GamePanel extends JPanel implements ActionListener {
             running = false;
         }
         // checks if head collides with floor
-        if (y[0] > SCREEN_HEIGHT) {
+        if (y[0] >= SCREEN_HEIGHT) {
             running = false;
         }
         if (!running) {
