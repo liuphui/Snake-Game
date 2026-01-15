@@ -30,11 +30,6 @@ public class GamePanel extends JPanel implements ActionListener {
     }
 
     public void startGame() {
-        newApple();
-        running = true;
-        timer = new Timer(DELAY, this);
-        timer.start();
-
         // First segment at (0, 0)
         x[0] = 0;
         y[0] = 0;
