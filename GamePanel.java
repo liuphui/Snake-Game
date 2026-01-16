@@ -8,7 +8,7 @@ public class GamePanel extends JPanel implements ActionListener {
     static final int SCREEN_HEIGHT = 600;
     static final int UNIT_SIZE = 50;
     static final int GAME_UNITS = (SCREEN_WIDTH * SCREEN_HEIGHT) / (UNIT_SIZE * UNIT_SIZE);
-    static final int DELAY = 100;
+    static final int DELAY = 150;
     final int x[] = new int[GAME_UNITS];
     final int y[] = new int[GAME_UNITS];
     int bodyParts = 2;
@@ -20,23 +20,43 @@ public class GamePanel extends JPanel implements ActionListener {
     Timer timer;
     Random rand;
     String textFont = "Courier";
+    Runnable onRestart;
+    JButton restartButton;
 
-    GamePanel() {
+    GamePanel(Runnable onRestart) {
+        this.onRestart = onRestart;
+
         rand = new Random();
         this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
         this.setBackground(Color.black);
         this.setFocusable(true);
         this.addKeyListener(new MyKeyAdapter());
+        setLayout(null);
+
+        restartButton = new JButton("RESTART");
+        restartButton.setFont(new Font(textFont, Font.BOLD, 30));
+        restartButton.setBounds(200, 350,  200, 50);
+        restartButton.setVisible(false);
+        restartButton.addActionListener(e -> onRestart.run());
+
+        add(restartButton);
     }
 
     public void startGame() {
-        // First segment at (0, 0)
-        x[0] = 0;
-        y[0] = 0;
-        
+        restartButton.setVisible(false);
+
+        bodyParts = 2;
+        applesEaten = 0;
+        direction = 'R';
+        running = true;
+
+        // First segment in the middle of the map
+        x[0] = (SCREEN_WIDTH / UNIT_SIZE / 2) * UNIT_SIZE;
+        y[0] = (SCREEN_HEIGHT / UNIT_SIZE / 2) * UNIT_SIZE;
+   
         // Second segment behind the head
-        x[1] = -UNIT_SIZE;
-        y[1] = 0;
+        x[1] = x[0] - UNIT_SIZE;
+        y[1] = y[0];
 
         newApple();
         running = true;
@@ -141,6 +161,7 @@ public class GamePanel extends JPanel implements ActionListener {
         }
         if (!running) {
             timer.stop();
+            restartButton.setVisible(true);
         }
     }
 

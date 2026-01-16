@@ -1,6 +1,7 @@
 import java.awt.CardLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 /**
  * GameFrame
@@ -9,14 +10,20 @@ public class GameFrame extends JFrame {
     CardLayout cardlayout = new CardLayout();
     JPanel panel = new JPanel(cardlayout);
     
-    GamePanel gamePanel = new GamePanel();
+    GamePanel gamePanel;
     MenuPanel menuPanel;
 
     GameFrame(){
-        menuPanel = new MenuPanel(() -> {
-            cardlayout.show(panel, "Game");
+        gamePanel = new GamePanel(() -> {
+            cardlayout.show(panel, "GAME");
             gamePanel.startGame();
-            gamePanel.requestFocusInWindow();
+            SwingUtilities.invokeLater(() -> gamePanel.requestFocusInWindow());
+        });
+
+        menuPanel = new MenuPanel(() -> {
+            cardlayout.show(panel, "GAME");
+            gamePanel.startGame();
+            SwingUtilities.invokeLater(() -> gamePanel.requestFocusInWindow());
         });
         
         panel.add(menuPanel, "START");
