@@ -15,10 +15,7 @@ You can verify using:
 
 ## How to Play (Recommended)
 👉 **Download the latest version:** 
-```md
-[![Download](https://img.shields.io/badge/Download-Latest%20Release-brightgreen)](
-https://github.com/liuphui/Snake-Game/releases/tag/v1.0.0
-) 
+[![Download](https://img.shields.io/badge/Download-Latest%20Release-brightgreen)](https://github.com/liuphui/Snake-Game/releases/latest)
 
 Then run:
 ```bash
