@@ -8,7 +8,7 @@ public class MenuPanel extends JPanel {
 
     public MenuPanel(Runnable onStart){
         setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
-        setBackground(Color.BLUE);
+        setBackground(Color.BLACK);
         setLayout(new GridBagLayout());
 
         JLabel title = new JLabel(
