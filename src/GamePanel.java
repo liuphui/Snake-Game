@@ -37,7 +37,7 @@ public class GamePanel extends JPanel implements ActionListener {
         restartButton.setFont(new Font(textFont, Font.BOLD, 30));
         restartButton.setBounds(200, 350, 200, 50);
         restartButton.setVisible(false);
-        restartButton.addActionListener(e -> onRestart.run());
+        restartButton.addActionListener(eye_size -> onRestart.run());
 
         add(restartButton);
     }
@@ -100,6 +100,7 @@ public class GamePanel extends JPanel implements ActionListener {
 
             for (int i = 0; i < bodyParts; i++) {
                 if (i == 0) {
+                    // Draw snake head
                     g2.setColor(new Color(148, 81, 37));
                     switch (direction) {
                         case 'R' -> {
@@ -119,6 +120,41 @@ public class GamePanel extends JPanel implements ActionListener {
                             g2.fillArc(x[0], y[0], UNIT_SIZE, UNIT_SIZE, 180, 180);                // nose
                         }
                     }
+
+                    // Draw snake eyes
+                    g2.setColor(Color.BLACK);
+
+                    int eye_size = UNIT_SIZE/8;
+                    int offset = UNIT_SIZE/4;
+
+                    int left_eye = x[0] + offset;
+                    int ey1 = y[0] + offset;
+
+                    int right_eye = x[0] + UNIT_SIZE - offset - eye_size;
+                    int ey2 = y[0] + offset;
+
+                    switch (direction) {
+                        case 'U' -> {
+                            // already correct
+                        }
+                        case 'D' -> {
+                            ey1 = y[0] + UNIT_SIZE - offset - eye_size;
+                            ey2 = y[0] + UNIT_SIZE - offset - eye_size;
+                        }
+                        case 'L' -> {
+                            left_eye  = x[0] + offset;
+                            right_eye = x[0] + offset;
+                            ey2 = y[0] + UNIT_SIZE - offset - eye_size;
+                        }
+                        case 'R' -> {
+                            left_eye  = x[0] + UNIT_SIZE - offset - eye_size;
+                            right_eye = x[0] + UNIT_SIZE - offset - eye_size;
+                            ey2 = y[0] + UNIT_SIZE - offset - eye_size;
+                        }
+                    }
+
+                    g2.fillOval(left_eye, ey1, eye_size, eye_size);
+                    g2.fillOval(right_eye, ey2, eye_size, eye_size);
                 } else {
                     g2.setColor(new Color(161, 50, 50));
                     //g.setColor(new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255)));
@@ -227,7 +263,7 @@ public class GamePanel extends JPanel implements ActionListener {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent eye_size) {
         if (running) {
             move();
             checkApple();
@@ -238,8 +274,8 @@ public class GamePanel extends JPanel implements ActionListener {
 
     public class MyKeyAdapter extends KeyAdapter {
         @Override
-        public void keyPressed(KeyEvent e) {
-            switch (e.getKeyCode()) {
+        public void keyPressed(KeyEvent eye_size) {
+            switch (eye_size.getKeyCode()) {
                 case KeyEvent.VK_LEFT:
                     if (direction != 'R') {
                         direction = 'L';
