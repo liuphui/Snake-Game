@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.event.*;
+import java.rmi.server.UnicastRemoteObject;
 import java.awt.*;
 import java.util.Random;
 
@@ -35,7 +36,7 @@ public class GamePanel extends JPanel implements ActionListener {
 
         restartButton = new JButton("RESTART");
         restartButton.setFont(new Font(textFont, Font.BOLD, 30));
-        restartButton.setBounds(200, 350,  200, 50);
+        restartButton.setBounds(200, 350, 200, 50);
         restartButton.setVisible(false);
         restartButton.addActionListener(e -> onRestart.run());
 
@@ -53,7 +54,7 @@ public class GamePanel extends JPanel implements ActionListener {
         // First segment in the middle of the map
         x[0] = (SCREEN_WIDTH / UNIT_SIZE / 2) * UNIT_SIZE;
         y[0] = (SCREEN_HEIGHT / UNIT_SIZE / 2) * UNIT_SIZE;
-   
+
         // Second segment behind the head
         x[1] = x[0] - UNIT_SIZE;
         y[1] = y[0];
@@ -62,7 +63,8 @@ public class GamePanel extends JPanel implements ActionListener {
         running = true;
 
         // Timer config
-        if (timer != null) timer.stop();
+        if (timer != null)
+            timer.stop();
         timer = new Timer(DELAY, this);
         timer.start();
     }
@@ -79,29 +81,46 @@ public class GamePanel extends JPanel implements ActionListener {
 
         if (running) {
             for (int i = 0; i < SCREEN_HEIGHT / UNIT_SIZE; i++) {
-                g.drawLine(i * UNIT_SIZE, 0, i * UNIT_SIZE, SCREEN_HEIGHT);
-                g.drawLine(0, i * UNIT_SIZE, SCREEN_WIDTH, i * UNIT_SIZE);
+                g2.drawLine(i * UNIT_SIZE, 0, i * UNIT_SIZE, SCREEN_HEIGHT);
+                g2.drawLine(0, i * UNIT_SIZE, SCREEN_WIDTH, i * UNIT_SIZE);
             }
-            g.setColor(Color.red);
-            g.fillOval(applesX, applesY, UNIT_SIZE, UNIT_SIZE);
+            g2.setColor(Color.red);
+            g2.fillOval(applesX, applesY, UNIT_SIZE, UNIT_SIZE);
 
             for (int i = 0; i < bodyParts; i++) {
                 if (i == 0) {
-                    g.setColor(Color.green);
-                    g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+                    g2.setColor(new Color(148, 81, 37));
+                    switch (direction) {
+                        case 'R' -> {
+                            g2.fillRect(x[0], y[0], UNIT_SIZE / 2 + 1, UNIT_SIZE);                 // neck
+                            g2.fillArc(x[0], y[0], UNIT_SIZE, UNIT_SIZE, -90, 180);                // nose
+                        }
+                        case 'L' -> {
+                            g2.fillRect(x[0] + UNIT_SIZE / 2 - 1, y[0], UNIT_SIZE / 2 + 1, UNIT_SIZE);     // neck
+                            g2.fillArc(x[0], y[0], UNIT_SIZE, UNIT_SIZE, 90, 180);                 // nose
+                        }
+                        case 'U' -> {
+                            g2.fillRect(x[0], y[0] + UNIT_SIZE / 2 - 1, UNIT_SIZE, UNIT_SIZE / 2 + 1);     // neck
+                            g2.fillArc(x[0], y[0], UNIT_SIZE, UNIT_SIZE, 0, 180);                  // nose
+                        }
+                        case 'D' -> {
+                            g2.fillRect(x[0], y[0], UNIT_SIZE, UNIT_SIZE / 2 + 1);                 // neck
+                            g2.fillArc(x[0], y[0], UNIT_SIZE, UNIT_SIZE, 180, 180);                // nose
+                        }
+                    }
                 } else {
-                    g.setColor(new Color(45, 180, 0));
+                    g2.setColor(new Color(161, 50, 50));
                     //g.setColor(new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255)));
-                    g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+                    g2.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
                 }
             }
-            g.setColor(Color.blue);
-            g.setFont(new Font(textFont, Font.BOLD, 40));
+            g2.setColor(Color.blue);
+            g2.setFont(new Font(textFont, Font.BOLD, 40));
             FontMetrics metrics = getFontMetrics(g.getFont());
-            g.drawString("SCORE: " + applesEaten, (SCREEN_WIDTH - metrics.stringWidth("SCORE: " + applesEaten))/2, g.getFont().getSize());
+            g2.drawString("SCORE: " + applesEaten, (SCREEN_WIDTH - metrics.stringWidth("SCORE: " + applesEaten))/2, g.getFont().getSize());
         }
         else {
-            gameOver(g);
+            gameOver(g2);
         }
     }
 
@@ -109,16 +128,16 @@ public class GamePanel extends JPanel implements ActionListener {
         while (true) {
             applesX = rand.nextInt((int) (SCREEN_WIDTH / UNIT_SIZE)) * UNIT_SIZE;
             applesY = rand.nextInt((int) (SCREEN_HEIGHT / UNIT_SIZE)) * UNIT_SIZE;
-            
+
             boolean onSnake = false;
-            for(int i = 0; i < bodyParts; i++){
-                if (x[i] == applesX && y[i] == applesY){
+            for (int i = 0; i < bodyParts; i++) {
+                if (x[i] == applesX && y[i] == applesY) {
                     onSnake = true;
                     break;
                 }
             }
 
-            if (!onSnake){
+            if (!onSnake) {
                 break;
             }
         }
@@ -187,12 +206,13 @@ public class GamePanel extends JPanel implements ActionListener {
         g.setColor(Color.blue);
         g.setFont(new Font(textFont, Font.BOLD, 75));
         FontMetrics metrics1 = getFontMetrics(g.getFont());
-        g.drawString("Game Over", (SCREEN_WIDTH - metrics1.stringWidth("Game Over"))/2, SCREEN_HEIGHT/2);
+        g.drawString("Game Over", (SCREEN_WIDTH - metrics1.stringWidth("Game Over")) / 2, SCREEN_HEIGHT / 2);
 
         g.setColor(Color.blue);
         g.setFont(new Font(textFont, Font.BOLD, 40));
         FontMetrics metrics2 = getFontMetrics(g.getFont());
-        g.drawString("SCORE: " + applesEaten, (SCREEN_WIDTH - metrics2.stringWidth("SCORE: " + applesEaten))/2, g.getFont().getSize());
+        g.drawString("SCORE: " + applesEaten, (SCREEN_WIDTH - metrics2.stringWidth("SCORE: " + applesEaten)) / 2,
+                g.getFont().getSize());
     }
 
     @Override
