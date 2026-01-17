@@ -29,7 +29,7 @@ public class GamePanel extends JPanel implements ActionListener {
 
         rand = new Random();
         this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
-        this.setBackground(Color.black);
+        this.setBackground(Color.green);
         this.setFocusable(true);
         this.addKeyListener(new MyKeyAdapter());
         setLayout(null);
@@ -114,7 +114,7 @@ public class GamePanel extends JPanel implements ActionListener {
                     g2.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
                 }
             }
-            g2.setColor(Color.blue);
+            g2.setColor(Color.green);
             g2.setFont(new Font(textFont, Font.BOLD, 40));
             FontMetrics metrics = getFontMetrics(g.getFont());
             g2.drawString("SCORE: " + applesEaten, (SCREEN_WIDTH - metrics.stringWidth("SCORE: " + applesEaten))/2, g.getFont().getSize());
