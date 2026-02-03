@@ -5,7 +5,6 @@ A repository which contains an old program which runs the 'Snake Game' built usi
 - Java JDK 17+
 
 You can verify using:
-1. 
 
 ```bash
 javac --version
