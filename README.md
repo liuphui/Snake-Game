@@ -14,7 +14,7 @@ javac --version
 or
 
 ```bash
-javac --version
+java --version
 ```
 
 ## Controls
