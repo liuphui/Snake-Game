@@ -5,9 +5,17 @@ A repository which contains an old program which runs the 'Snake Game' built usi
 - Java JDK 17+
 
 You can verify using:
-1. `javac --version`
-or 
-2. `java --version`
+1. 
+
+```bash
+javac --version
+```
+
+or
+
+```bash
+javac --version
+```
 
 ## Controls
 - Arrow keys: move
